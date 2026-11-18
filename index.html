@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentDrop — Free badge for Agent ID holders</title>
+<meta name="description" content="AgentDrop: claim one free AgentDrop Badge NFT on BNB Chain. Only Binance Agent ID holders can claim, one per holder, gas only — no fees.">
+<style>
+  :root { --bg:#0b0f1a; --card:#121829; --gold:#f0b90b; --text:#e8ecf3; --muted:#9aa3b2; --green:#22c55e; --red:#ef4444; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:680px; margin:0 auto; padding:32px 20px 64px; }
+  header { text-align:center; margin-bottom:28px; }
+  .badge { width:120px; height:120px; margin:0 auto 16px; border-radius:24px; background:#f0b90b; color:#0b0f1a; display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:800; }
+  h1 { margin:0 0 8px; font-size:32px; }
+  p.sub { color:var(--muted); margin:0; line-height:1.5; }
+  .card { background:var(--card); border:1px solid #232c47; border-radius:16px; padding:20px; margin-top:16px; }
+  .row { display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid #1c2440; }
+  .row:last-child { border-bottom:none; }
+  .label { color:var(--muted); }
+  .value { font-weight:600; text-align:right; word-break:break-all; }
+  .ok { color:var(--green); } .bad { color:var(--red); } .warn { color:var(--gold); }
+  button { display:block; width:100%; padding:14px; margin-top:16px; border:none; border-radius:12px; background:var(--gold); color:#0b0f1a; font-size:17px; font-weight:700; cursor:pointer; }
+  button:disabled { background:#2a3350; color:#7c86a3; cursor:not-allowed; }
+  button.secondary { background:transparent; border:1px solid #3a4568; color:var(--text); }
+  .bar { height:10px; background:#1c2440; border-radius:6px; overflow:hidden; margin-top:8px; }
+  .bar > div { height:100%; background:var(--gold); width:0%; }
+  #status { margin-top:14px; font-size:14px; line-height:1.5; color:var(--muted); white-space:pre-wrap; word-break:break-word; }
+  #status a { color:var(--gold); }
+  footer { margin-top:32px; text-align:center; color:var(--muted); font-size:13px; line-height:1.7; }
+  footer a { color:var(--gold); }
+  .banner { background:#2a2103; border:1px solid #6b5510; color:#f5d76e; border-radius:12px; padding:12px 16px; margin-top:16px; font-size:14px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">A</div>
+    <h1>AgentDrop</h1>
+    <p class="sub">One free badge for Binance Agent ID holders.<br>
+    Claim it on BNB Chain — price is 0, you only pay gas. No fees, no promises.</p>
+  </header>
+
+  <div id="deployBanner" class="banner" style="display:none">
+    The AgentDrop contract is not deployed yet. You can still connect your wallet
+    and check your Agent ID below — claiming opens as soon as the contract is live.
+  </div>
+
+  <div class="card">
+    <div class="row"><span class="label">Network</span><span class="value" id="network">BNB Chain (56)</span></div>
+    <div class="row"><span class="label">Claimed so far</span><span class="value" id="claimedCount">— / 10,000</span></div>
+    <div class="bar"><div id="claimedBar"></div></div>
+    <div class="row"><span class="label">Your wallet</span><span class="value" id="address">not connected</span></div>
+    <div class="row"><span class="label">Agent ID held</span><span class="value" id="agentId">—</span></div>
+    <div class="row"><span class="label">Your claim</span><span class="value" id="claimState">—</span></div>
+  </div>
+
+  <button id="connectBtn">Connect wallet</button>
+  <button id="switchBtn" class="secondary" style="display:none">Switch to BNB Chain</button>
+  <button id="claimBtn" disabled>Claim your free badge</button>
+  <div id="status"></div>
+
+  <footer>
+    Built for the Binance Agent ID Hackathon.<br>
+    Contract: <span id="contractAddr">not deployed yet</span> ·
+    <a id="repoLink" href="https://github.com/ichwann12/agentdrop" target="_blank" rel="noopener">source code on GitHub</a><br>
+    Login is by injected wallet only (MetaMask / Binance Wallet extension). No QR codes, no pairing codes.
+    Never share your seed phrase or private key with anyone — AgentDrop never asks for them.
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.17.0/dist/ethers.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // --- Configuration -------------------------------------------------------
+  var AGENT_ID_ADDRESS = '0x60b9262456de011f7d15a54cdd8c48baaa8b022f'; // SPACE ID Agent ID, BNB Chain
+  // TODO: replace with the deployed AgentDrop contract address after deployment.
+  var AGENTDROP_ADDRESS = '0x0000000000000000000000000000000000000000';
+  var BSC_RPC = 'https://bsc-dataseed.binance.org/';
+  var BSC_CHAIN_ID = 56;
+  var BSCSCAN = 'https://bscscan.com';
+
+  var AGENT_ID_ABI = ['function balanceOf(address owner) view returns (uint256)'];
+  var AGENTDROP_ABI = [
+    'function claim()',
+    'function claimed(address) view returns (bool)',
+    'function totalClaimed() view returns (uint256)',
+    'function MAX_SUPPLY() view returns (uint256)',
+    'function name() view returns (string)',
+  ];
+
+  var deployed = AGENTDROP_ADDRESS !== '0x0000000000000000000000000000000000000000';
+
+  // --- Elements ------------------------------------------------------------
+  var $ = function (id) { return document.getElementById(id); };
+  var statusEl = $('status');
+
+  function setStatus(msg, isError) {
+    statusEl.textContent = msg;
+    statusEl.style.color = isError ? '#ef4444' : '';
+  }
+
+  function short(addr) { return addr.slice(0, 6) + '...' + addr.slice(-4); }
+
+  if (typeof ethers === 'undefined') {
+    setStatus('Could not load the ethers library from the CDN. Check your connection and reload the page.', true);
+    $('connectBtn').disabled = true;
+    return;
+  }
+
+  var readProvider = new ethers.JsonRpcProvider(BSC_RPC);
+  var agentId = new ethers.Contract(AGENT_ID_ADDRESS, AGENT_ID_ABI, readProvider);
+  var agentDrop = deployed ? new ethers.Contract(AGENTDROP_ADDRESS, AGENTDROP_ABI, readProvider) : null;
+
+  if (!deployed) {
+    $('deployBanner').style.display = 'block';
+    $('contractAddr').textContent = 'not deployed yet';
+  } else {
+    $('contractAddr').textContent = AGENTDROP_ADDRESS;
+  }
+
+  // --- Public stats (no wallet needed) --------------------------------------
+  async function refreshStats() {
+    if (!deployed) { $('claimedCount').textContent = '— / 10,000'; return; }
+    try {
+      var total = await agentDrop.totalClaimed();
+      var max = await agentDrop.MAX_SUPPLY();
+      $('claimedCount').textContent = total.toString() + ' / ' + max.toString();
+      $('claimedBar').style.width = (Number(total) * 100 / Number(max)).toFixed(2) + '%';
+    } catch (e) {
+      $('claimedCount').textContent = 'could not read — try again later';
+    }
+  }
+  refreshStats();
+
+  // --- Wallet ---------------------------------------------------------------
+  var signer = null;
+  var userAddress = null;
+
+  async function refreshUser() {
+    if (!userAddress) return;
+    try {
+      var bal = await agentId.balanceOf(userAddress);
+      var hasId = bal > 0n;
+      $('agentId').textContent = hasId ? 'yes (' + bal.toString() + ')' : 'no';
+      $('agentId').className = 'value ' + (hasId ? 'ok' : 'bad');
+      if (!deployed) {
+        $('claimState').textContent = 'contract not deployed yet';
+        $('claimBtn').disabled = true;
+        return;
+      }
+      var already = await agentDrop.claimed(userAddress);
+      $('claimState').textContent = already ? 'already claimed' : 'not claimed yet';
+      $('claimState').className = 'value ' + (already ? 'warn' : 'ok');
+      var total = await agentDrop.totalClaimed();
+      var max = await agentDrop.MAX_SUPPLY();
+      var left = total < max;
+      $('claimBtn').disabled = !(hasId && !already && left);
+      if (!hasId) setStatus('This wallet does not hold an Agent ID. You need an Agent ID (name.ai) to claim. Claim one in the Binance app: Wallet > Agent ID.');
+      else if (already) setStatus('This wallet already claimed its badge.');
+      else if (!left) setStatus('All 10,000 badges are claimed.');
+      else setStatus('You are eligible. Claim your free badge — price is 0, you only pay gas.');
+    } catch (e) {
+      setStatus('Could not read your status: ' + (e.shortMessage || e.message || e), true);
+    }
+  }
+
+  $('connectBtn').addEventListener('click', async function () {
+    if (!window.ethereum) {
+      setStatus('No wallet found in this browser. Install MetaMask or the Binance Wallet browser extension, then reload this page.', true);
+      return;
+    }
+    try {
+      var provider = new ethers.BrowserProvider(window.ethereum);
+      var accounts = await provider.send('eth_requestAccounts', []);
+      userAddress = accounts[0];
+      signer = await provider.getSigner();
+      $('address').textContent = short(userAddress);
+      $('connectBtn').textContent = 'Connected: ' + short(userAddress);
+      var net = await provider.getNetwork();
+      if (Number(net.chainId) !== BSC_CHAIN_ID) {
+        $('switchBtn').style.display = 'block';
+        setStatus('Your wallet is on chain ' + net.chainId + '. Switch to BNB Chain (56) to claim.', true);
+      } else {
+        $('switchBtn').style.display = 'none';
+      }
+      await refreshUser();
+      window.ethereum.on('accountsChanged', function (accs) {
+        userAddress = accs[0] || null;
+        signer = null;
+        $('address').textContent = userAddress ? short(userAddress) : 'not connected';
+        if (userAddress) { provider.getSigner().then(function (s) { signer = s; refreshUser(); }); }
+      });
+      window.ethereum.on('chainChanged', function () { window.location.reload(); });
+    } catch (e) {
+      setStatus('Wallet connection failed: ' + (e.shortMessage || e.message || e), true);
+    }
+  });
+
+  $('switchBtn').addEventListener('click', async function () {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x38' }],
+      });
+    } catch (e) {
+      if (e.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{ chainId: '0x38', chainName: 'BNB Smart Chain', nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 }, rpcUrls: [BSC_RPC], blockExplorerUrls: [BSCSCAN] }],
+          });
+        } catch (e2) { setStatus('Could not add BNB Chain: ' + (e2.shortMessage || e2.message || e2), true); }
+      } else {
+        setStatus('Could not switch network: ' + (e.shortMessage || e.message || e), true);
+      }
+    }
+  });
+
+  $('claimBtn').addEventListener('click', async function () {
+    if (!signer || !userAddress) { setStatus('Connect your wallet first.', true); return; }
+    if (!deployed) { setStatus('The contract is not deployed yet.', true); return; }
+    $('claimBtn').disabled = true;
+    setStatus('Sending your claim transaction… confirm it in your wallet.');
+    try {
+      var contract = new ethers.Contract(AGENTDROP_ADDRESS, AGENTDROP_ABI, signer);
+      var tx = await contract.claim();
+      setStatus('Transaction sent: ' + tx.hash + '\nWaiting for confirmation…\n' + BSCSCAN + '/tx/' + tx.hash);
+      var receipt = await tx.wait();
+      if (receipt.status === 1) {
+        setStatus('Claimed! Your AgentDrop Badge is on its way.\n' + BSCSCAN + '/tx/' + tx.hash);
+        await refreshStats();
+        await refreshUser();
+      } else {
+        setStatus('Transaction failed on-chain. See ' + BSCSCAN + '/tx/' + tx.hash, true);
+        $('claimBtn').disabled = false;
+      }
+    } catch (e) {
+      setStatus('Claim failed: ' + (e.shortMessage || e.message || e), true);
+      $('claimBtn').disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
