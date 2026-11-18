@@ -1,7 +1,8 @@
-# AgentDrop — Binance Agent ID Hackathon submission (draft)
+# AgentDrop — Binance Agent ID Hackathon submission
 
-> DRAFT — contract address and deployment details are filled in after the
-> mainnet deployment. Nothing here has been submitted yet.
+> Submission draft. Contract is deployed and verified on BNB Chain mainnet.
+> Project submission to Binance is NOT done yet — see "Submission channel"
+> below. Nothing here has been submitted yet.
 
 ## Project
 
@@ -9,9 +10,20 @@
 - **Website:** https://ichwann12.github.io/agentdrop
 - **Repository:** https://github.com/ichwann12/agentdrop
 - **Contract address (BNB Chain, chain 56):** [0xa399068Ad8b5359BE1c53d51219DD3E0809e526C](https://bscscan.com/address/0xa399068Ad8b5359BE1c53d51219DD3E0809e526C)
-- **Contract source:** verified on BscScan from `build/AgentDrop.flattened.sol`
-  (single-file source, MIT, compiler solc 0.8.38, evmVersion Shanghai,
-  optimizer runs 200)
+- **Contract name / symbol:** AgentDrop Badge / AGENTDROP
+- **Deployed:** 2026-11-18 22:11 WIB, block 134333129, deploy tx
+  [0xbc687b877f4d7a3bee5d8468f5c750e8b770b120958adc2470de7021e0c2fd7e](https://bscscan.com/tx/0xbc687b877f4d7a3bee5d8468f5c750e8b770b120958adc2470de7021e0c2fd7e)
+  (fee 0.0001795 BNB), via the EIP-2470 Singleton Factory
+  `0xce0042B868300000d44A59004Da54A005ffdcf9f`
+- **Deployer / reward receiving address (Agentic Wallet):**
+  `0x32fA58dFef0B2a6AE66BfcBE696D8175C5A8A64A`
+- **Contract source:** **VERIFIED on BscScan** — verified 2026-11-19 01:23 WIB
+  via the BscScan API, result "Pass - Verified". Single-file source from
+  `build/AgentDrop.flattened.sol` (1,669 lines, 60,853 bytes), MIT license,
+  compiler solc **v0.8.38+commit.1835d247**, optimizer enabled, **200 runs**,
+  EVM version **shanghai**, constructor argument = Agent ID contract address
+  `0x60b9262456de011f7d15a54cdd8c48baaa8b022f` (ABI-encoded). BscScan source
+  page: https://bscscan.com/address/0xa399068Ad8b5359BE1c53d51219DD3E0809e526C#code
 - **Agent ID contract used:** `0x60b9262456de011f7d15a54cdd8c48baaa8b022f`
   (SPACE ID Agent ID, ERC-721, non-transferable)
 - **Submitted by:** ichwann.ai (Agent ID holder)
@@ -47,6 +59,25 @@ with the claim function at all.
   addresses having interacted with the contract during the submission period
   (18 Nov – 9 Dec 2026). Promotion to Agent ID holders (Boltbook, X) is
   planned to reach that threshold.
+
+## Submission channel
+
+- **Status (checked 2026-11-19 01:30 WIB): no official project submission
+  form or link has been published.** The hackathon announcement
+  (https://www.binance.com/en/support/announcement/detail/95f5dbe0ea674a48a739b59e046648bf)
+  instructs projects to submit "project name, website, contract address(es),
+  Agent ID usage description, and other required materials" during the
+  submission period, but links no form. The same is true of the Binance
+  Square version of the announcement and the @BinanceWallet X pinned post,
+  which both link back to the announcement only.
+- The only survey linked anywhere in the announcement is the **Agent
+  Ecosystem Promotion (X) campaign survey**
+  (https://app.binance.com/uni-qr/user-survey/ff6832f8d2984af289068c9450a3c98c)
+  — that survey is for submitting X post links for the community promotion
+  award, **not** for project submission. Do not confuse the two.
+- **Submission deadline: 9 Dec 2026 08:00 UTC (15:00 WIB).** Re-check the
+  announcement page and @BinanceWallet for a project submission form before
+  the deadline, and add its URL here when it appears.
 
 ## Safety
 
