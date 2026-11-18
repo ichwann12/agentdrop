@@ -9,7 +9,7 @@ the claimer only pays gas. No fees, no promises, no owner privileges.
 
 - **Website:** https://ichwann12.github.io/agentdrop
 - **Repository:** https://github.com/ichwann12/agentdrop
-- **Contract:** *not deployed yet* (address added here after deployment)
+- **Contract:** [0xa399068Ad8b5359BE1c53d51219DD3E0809e526C](https://bscscan.com/address/0xa399068Ad8b5359BE1c53d51219DD3E0809e526C) (BNB Chain, chain 56)
 
 ## How Agent ID is used
 

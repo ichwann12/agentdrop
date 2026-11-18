@@ -8,7 +8,7 @@
 - **Project name:** AgentDrop
 - **Website:** https://ichwann12.github.io/agentdrop
 - **Repository:** https://github.com/ichwann12/agentdrop
-- **Contract address (BNB Chain, chain 56):** TODO — filled in after deployment
+- **Contract address (BNB Chain, chain 56):** [0xa399068Ad8b5359BE1c53d51219DD3E0809e526C](https://bscscan.com/address/0xa399068Ad8b5359BE1c53d51219DD3E0809e526C)
 - **Contract source:** verified on BscScan from `build/AgentDrop.flattened.sol`
   (single-file source, MIT, compiler solc 0.8.38, evmVersion Shanghai,
   optimizer runs 200)
