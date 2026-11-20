@@ -1,8 +1,12 @@
 # AgentDrop — Binance Agent ID Hackathon submission
 
-> Submission draft. Contract is deployed and verified on BNB Chain mainnet.
-> Project submission to Binance is NOT done yet — see "Submission channel"
-> below. Nothing here has been submitted yet.
+> **SUBMITTED 2026-11-20 17:58 WIB** — Agent ID Hackathon Project Submission
+> Form (https://www.binance.com/en/survey/fb26d2bd25e04329b1ba77c7b3811d23),
+> all 19 fields. Confirmation: "Survey already completed — You have already
+> completed this survey. Thanks for your support to Binance." No reference ID
+> shown. Demo video: https://ichwann12.github.io/agentdrop/agentdrop-demo.mp4
+> (61 s, commit a93fcc1). Contact: Team AgentDrop, nurichwan81.dpk0715@gmail.com,
+> Telegram @Ichwann1. Reward address 0x32fA58dFef0B2a6AE66BfcBE696D8175C5A8A64A.
 
 ## Project
 
@@ -62,22 +66,30 @@ with the claim function at all.
 
 ## Submission channel
 
-- **Status (checked 2026-11-19 01:30 WIB): no official project submission
-  form or link has been published.** The hackathon announcement
-  (https://www.binance.com/en/support/announcement/detail/95f5dbe0ea674a48a739b59e046648bf)
-  instructs projects to submit "project name, website, contract address(es),
-  Agent ID usage description, and other required materials" during the
-  submission period, but links no form. The same is true of the Binance
-  Square version of the announcement and the @BinanceWallet X pinned post,
-  which both link back to the announcement only.
-- The only survey linked anywhere in the announcement is the **Agent
-  Ecosystem Promotion (X) campaign survey**
+- **SUBMITTED 2026-11-20 17:58 WIB** via the official "Agent ID Hackathon
+  Project Submission Form":
+  https://www.binance.com/en/survey/fb26d2bd25e04329b1ba77c7b3811d23
+  (found 2026-11-20 09:29 WIB from the announcement page's "Submit Project
+  Now" button and Binance Square). All 19 fields filled: project name
+  AgentDrop, overview, BscScan contract link, website, X announcement,
+  Agent ID usage description, use cases (Identity Recognition/Verification,
+  Permission Management/Access Control, Agent Identity Binding/Identification),
+  product launched Yes, contract address, BscScan link, on-chain interaction
+  Yes, demo video https://ichwann12.github.io/agentdrop/agentdrop-demo.mp4,
+  code repo, supporting materials, Team Name AgentDrop, contact email
+  nurichwan81.dpk0715@gmail.com, Telegram @Ichwann1, reward receiving address
+  `0x32fA58dFef0B2a6AE66BfcBE696D8175C5A8A64A`, participation declaration
+  (all four statements checked). Confirmation page: "Survey already
+  completed — You have already completed this survey. Thanks for your support
+  to Binance." No submission reference ID was shown. Note: the submitted
+  Agent ID description states "32 Agent ID holders have claimed so far"
+  (the figure from 19 Nov); the on-chain count at submit time was 55.
+- The **Agent Ecosystem Promotion (X) campaign survey**
   (https://app.binance.com/uni-qr/user-survey/ff6832f8d2984af289068c9450a3c98c)
-  — that survey is for submitting X post links for the community promotion
-  award, **not** for project submission. Do not confuse the two.
-- **Submission deadline: 9 Dec 2026 08:00 UTC (15:00 WIB).** Re-check the
-  announcement page and @BinanceWallet for a project submission form before
-  the deadline, and add its URL here when it appears.
+  is for submitting X post links for the community promotion award, **not**
+  for project submission. Do not confuse the two.
+- **Submission deadline was 9 Dec 2026 08:00 UTC (15:00 WIB)** — submitted
+  well before it. Internal review 9–17 Dec, public review 17–20 Dec.
 
 ## Safety
 
